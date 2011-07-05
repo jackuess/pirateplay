@@ -4,6 +4,11 @@ service = [
 				'template'	:	'http://svtplay.se/%(url)s'},
 			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
 				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s'}],
+		[#SVT-play-alternate/flv clip
+			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
+				'template'	:	'http://svtplay.se/%(url)s'},
+			{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
+				'template'	:	'#URL\n%(url)s'}],
 		[#UR-play.se
 			{	're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
 				'template'	:	'http://urplay.se/%(url)s'},
