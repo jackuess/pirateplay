@@ -56,4 +56,9 @@ service = [
 				'template'	:	'kanal5://%(video_player)s'},
 			{
 				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^"]+)";',
-				'template'	:	'#Resolution: %(height)sx%(width)s;\nrtmpdump --swfVfy "http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf" -r %(URL)s -y %(path)s'}]]
+				'template'	:	'#Resolution: %(height)sx%(width)s;\nrtmpdump --swfVfy "http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf" -r %(URL)s -y %(path)s'}],
+		[#Axess-TV
+			{	're'		:	r'(?:http://)?(?:www.)?axess.se/(?P<url>.+)',
+				'template'	:	'http://axess.se/%(url)s'},
+			{	're'		:	r'url: \'(?P<url>[^\']+)\'.*netConnectionUrl: \'(?P<base>[^\']+)',
+				'template'	:	'rtmpdump -r %(base)s -y %(url)s'}]]
