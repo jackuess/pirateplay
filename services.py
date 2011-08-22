@@ -3,7 +3,7 @@ service = [
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
 			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s'}],
+				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
 		[#SVT-play-alternate/flv clip
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
@@ -13,29 +13,29 @@ service = [
 			{	're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
 				'template'	:	'http://urplay.se/%(url)s'},
 			{	're'		:	r'file=/(?P<url>[^&]+).*?(?P<ext>mp[34]):',
-				'template'	:	'rtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand'}],
+				'template'	:	'rtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand -o %(output_file)s'}],
 		[#TV4-play
 			{	're'		:	r'(?:http://)?(?:www.)?tv4play.se/.*videoid=(?P<id>\d+).*',
 				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
 			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)+',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://www.tv4play.se/flash/tv4playflashlets.swf -r %(base)s -y %(url)s'}],
+				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://www.tv4play.se/flash/tv4playflashlets.swf -r %(base)s -y %(url)s -o %(output_file)s'}],
 		[#MTG
 			{	're'		:	r'(?:http://)?(?:www.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
 			{	're'		:	r'<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>rtmp[^\]]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s'}],
+				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
 		[#MTG-alternate
 			{	're'		:	r'(?:http://)?(?:www.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
 			{	're'		:	r'<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
 				'template'	:	'%(url)s'},
 			{	're'		:	r'<Url>(?P<url>[^<]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s'}],
+				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
 		[#Aftonbladet-TV
 			{	're'		:	r'(?:http://)?(?:www.)?aftonbladet.se/(?P<url>.+)',
 				'template'	:	'http://aftonbladet.se/%(url)s'},
 			{	're'		:	'videoUrl:\s"(?P<base>rtmp://ss11i04.stream.ip-only.net/[^/]+/)(?P<url>[^"]+)"',
-				'template'	:	'rtmpdump -r %(base)s -y %(url)s'}],
+				'template'	:	'rtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}],
 		[#Vimeo
 			{
 				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
@@ -56,9 +56,9 @@ service = [
 				'template'	:	'kanal5://%(video_player)s'},
 			{
 				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^"]+)";',
-				'template'	:	'#Resolution: %(height)sx%(width)s;\nrtmpdump --swfVfy "http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf" -r %(URL)s -y %(path)s'}],
+				'template'	:	'#Resolution: %(height)sx%(width)s;\nrtmpdump --swfVfy "http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf" -r %(URL)s -y %(path)s -o %(output_file)s'}],
 		[#Axess-TV
 			{	're'		:	r'(?:http://)?(?:www.)?axess.se/(?P<url>.+)',
 				'template'	:	'http://axess.se/%(url)s'},
 			{	're'		:	r'url: \'(?P<url>[^\']+)\'.*netConnectionUrl: \'(?P<base>[^\']+)',
-				'template'	:	'rtmpdump -r %(base)s -y %(url)s'}]]
+				'template'	:	'rtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}]]

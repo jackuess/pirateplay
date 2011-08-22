@@ -18,10 +18,10 @@ class redirect_handler(urllib2.HTTPRedirectHandler):
 	def http_error_302(self, req, fp, code, msg, headers):
 		return cStringIO.StringIO(str(headers))
 
-def generate_getcmd(url):
+def generate_getcmd(url, **args):
 	urllib2.install_opener(urllib2.build_opener(redirect_handler()))
 	for channel_service in service:
-		match_vars = {}
+		match_vars = args
 		content = url
 		for item in channel_service:
 			for match in re.finditer(item['re'], content, re.DOTALL):
@@ -44,5 +44,5 @@ def generate_getcmd(url):
 					break
 
 if __name__ == "__main__":
-	for cmd in remove_duplicates(generate_getcmd(sys.argv[1])):
+	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], output_file="-")):
 		print(cmd)
