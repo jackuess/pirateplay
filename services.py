@@ -9,6 +9,11 @@ service = [
 				'template'	:	'http://svtplay.se/%(url)s'},
 			{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
 				'template'	:	'#URL\n%(url)s'}],
+		[#SR
+			{	're'		:	r'(?:http://)?(?:www.)?sverigesradio.se/(?P<url>.+)',
+				'template'	:	'http://sverigesradio.se/%(url)s'},
+			{	're'		:	r'<ref href="(?P<url>[^"]+)"',
+				'template'	:	'#URL\n%(url)s'}],
 		[#UR-play.se
 			{	're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
 				'template'	:	'http://urplay.se/%(url)s'},
