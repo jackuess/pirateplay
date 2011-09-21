@@ -38,6 +38,7 @@ def generate_getcmd(url, **args):
 					else:
 						yield next_url
 				except ValueError:
+					next_url = next_url.replace('mp4:', ' -y mp4:') #Add playpath when needed, in a hackish manner
 					yield next_url
 			else:
 				if content == url:
