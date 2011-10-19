@@ -34,7 +34,7 @@ class redirect_handler(urllib2.HTTPRedirectHandler):
 	def http_error_302(self, req, fp, code, msg, headers):
 		return cStringIO.StringIO(str(headers))
 
-def generate_getcmd(url, rtmpdump_cmds = True, **args):
+def generate_getcmd(url, librtmp = False, **args):
 	urllib2.install_opener(urllib2.build_opener(redirect_handler()))
 	for channel_service in service:
 		match_vars = args
@@ -52,16 +52,16 @@ def generate_getcmd(url, rtmpdump_cmds = True, **args):
 					if next_url[:9] == 'kanal5://':
 						content = get_kanal5(next_url[9:]).encode('ascii')
 					else:
-						if rtmpdump_cmds: yield next_url
+						if not librtmp: yield next_url
 						else: yield convert_rtmpdump(next_url)
 				except ValueError:
 					next_url = next_url.replace('/mp4:', '/ -y mp4:') #Add playpath when needed, in a hackish manner
-					if rtmpdump_cmds: yield next_url
+					if not librtmp: yield next_url
 					else: yield convert_rtmpdump(next_url)
 			else:
 				if content == url:
 					break
 
 if __name__ == "__main__":
-	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], True, output_file="-")):
+	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
 		print(cmd)
