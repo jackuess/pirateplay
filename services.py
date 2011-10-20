@@ -39,7 +39,7 @@ service = [
 		[#Aftonbladet-TV
 			{	're'		:	r'(?:http://)?(?:www.)?aftonbladet.se/(?P<url>.+)',
 				'template'	:	'http://aftonbladet.se/%(url)s'},
-			{	're'		:	'videoUrl:\s"(?P<base>rtmp://ss11i04.stream.ip-only.net/[^/]+/)(?P<url>[^"]+)"',
+			{	're'		:	'videoUrl:\s"(?P<base>rtmp://(ss11i04.stream.ip-only.net|fl1.c00862.cdn.qbrick.com)/[^/]+/)(?P<url>[^"]+)"',
 				'template'	:	'rtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}],
 		[#Vimeo
 			{
