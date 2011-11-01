@@ -64,6 +64,5 @@ def generate_getcmd(url, librtmp = False, **args):
 					break
 
 if __name__ == "__main__":
-	#for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
-	for cmd in generate_getcmd(sys.argv[1], False, output_file="-"):
+	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
 		print(cmd)

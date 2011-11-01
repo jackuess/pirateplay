@@ -3,7 +3,8 @@ service = [
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)(?=.*?subtitle=(?P<sub>[^&]*))',
 				'template'	:	'#quality: %(bitrate)s kbps; subtitle: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
 		[#SVT-play-alternate/flv clip
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
