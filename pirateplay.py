@@ -37,7 +37,8 @@ class redirect_handler(urllib2.HTTPRedirectHandler):
 def generate_getcmd(url, librtmp = False, **args):
 	urllib2.install_opener(urllib2.build_opener(redirect_handler()))
 	for channel_service in service:
-		match_vars = args
+		match_vars = {'sub' : ''}
+		match_vars.update(args)
 		content = url
 		for item in channel_service:
 			for match in re.finditer(item['re'], content, re.DOTALL):
@@ -63,5 +64,6 @@ def generate_getcmd(url, librtmp = False, **args):
 					break
 
 if __name__ == "__main__":
-	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
+	#for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
+	for cmd in generate_getcmd(sys.argv[1], False, output_file="-"):
 		print(cmd)

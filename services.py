@@ -2,8 +2,9 @@ service = [
 		[#SVT-play
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
-			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
+			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+				'template'	:	'#bitrate: %(bitrate)s kbps; subtitle: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
 		[#SVT-play-alternate/flv clip
 			{	're'		:	r'(?:http://)?(?:www.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
@@ -22,20 +23,20 @@ service = [
 		[#TV4-play
 			{	're'		:	r'(?:http://)?(?:www.)?tv4play.se/.*videoid=(?P<id>\d+).*',
 				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
-			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)+',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://www.tv4play.se/flash/tv4playflashlets.swf -r %(base)s -y %(url)s -o %(output_file)s'}],
+			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)(?=.*?(?P<sub>http://anytime.tv4.se/multimedia/vman/smiroot/[^<]+))?',
+				'template'	:	'#bitrate: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://www.tv4play.se/flash/tv4playflashlets.swf -r %(base)s -y %(url)s -o %(output_file)s'}],
 		[#MTG
 			{	're'		:	r'(?:http://)?(?:www.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
-			{	're'		:	r'<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>rtmp[^\]]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
+			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>rtmp[^\]]+)',
+				'template'	:	'#bitrate: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
 		[#MTG-alternate
 			{	're'		:	r'(?:http://)?(?:www.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
-			{	're'		:	r'<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
+			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
 				'template'	:	'%(url)s'},
 			{	're'		:	r'<Url>(?P<url>[^<]+)',
-				'template'	:	'#bitrate: %(bitrate)s kbps;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
+				'template'	:	'#bitrate: %(bitrate)s kbps; subtitles: %(sub)s\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
 		[#Aftonbladet-TV
 			{	're'		:	r'(?:http://)?(?:www.)?aftonbladet.se/(?P<url>.+)',
 				'template'	:	'http://aftonbladet.se/%(url)s'},
