@@ -19,8 +19,8 @@ service = [
 		[#UR-play.se
 			{	're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
 				'template'	:	'http://urplay.se/%(url)s'},
-			{	're'		:	r'file=/(?P<url>[^&]+).*?(?P<ext>mp[34]):',
-				'template'	:	'#\nrtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand -o %(output_file)s'}],
+			{	're'		:	r'file=/(?P<url>[^&]+(?P<ext>mp[34]))(?:.*?captions.file=(?P<sub>[^&]+))?',
+				'template'	:	'#subtitles: %(sub)s;\nrtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand -o %(output_file)s'}],
 		[#TV4-play
 			{	're'		:	r'(?:http://)?(?:www.)?tv4play.se/.*videoid=(?P<id>\d+).*',
 				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
