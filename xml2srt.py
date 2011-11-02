@@ -31,7 +31,7 @@ class DCHandler(xml.sax.ContentHandler):
 def xml2srt(url):
 	handler = DCHandler()
 	xml.sax.parseString(urllib2.urlopen(url).read(), handler)
-	return handler.data.encode('utf8')
+	return unicode(handler.data)
 
 if __name__ == "__main__":
 	print xml2srt(sys.argv[1])
