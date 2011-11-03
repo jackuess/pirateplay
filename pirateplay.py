@@ -19,7 +19,7 @@ def remove_duplicates(cmds):
 def convert_rtmpdump(rtmpdump_cmd):
 	meta, cmd = rtmpdump_cmd.split('\n')
 	args = cmd[9:].split() # Strip 'rtmpdump ' and split
-	optlist = getopt.getopt(args, 'r:o:W:y:', ['rtmp=', 'swfVfy=', 'playpath='])[0]
+	optlist = getopt.getopt(args, 'r:o:W:y:a:', ['rtmp=', 'swfVfy=', 'playpath=', 'app='])[0]
 	rtmp_string = ""
 	for optpair in optlist:
 		if optpair[0] == '--rtmp' or optpair[0] == '-r':
@@ -28,6 +28,8 @@ def convert_rtmpdump(rtmpdump_cmd):
 			rtmp_string += ' swfVfy=1 swfUrl=' + optpair[1]
 		elif optpair[0] == '--playpath' or optpair[0] == '-y':
 			rtmp_string += ' playpath=' + optpair[1]
+		elif optpair[0] == '--app' or optpair[0] == '-a':
+			rtmp_string += ' app=' + optpair[1]
 	return meta + '\n' + rtmp_string
 
 class redirect_handler(urllib2.HTTPRedirectHandler):
