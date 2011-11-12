@@ -17,6 +17,7 @@ def remove_duplicates(cmds):
 	return dict.keys()
 
 def convert_rtmpdump(rtmpdump_cmd, convert):
+	# Do we realy want to convert?
 	if convert:
 		meta, cmd = rtmpdump_cmd.split('\n')
 		args = cmd[9:].split() # Strip 'rtmpdump ' and split
@@ -32,6 +33,7 @@ def convert_rtmpdump(rtmpdump_cmd, convert):
 			elif optpair[0] == '--app' or optpair[0] == '-a':
 				rtmp_string += ' app=' + optpair[1]
 		return meta + '\n' + rtmp_string
+	# ..or just pass through?
 	else:
 		return rtmpdump_cmd
 

@@ -20,8 +20,9 @@ service = [
 				'template'	:	'http://sverigesradio.se/%(url)s'},
 			{	're'		:	r'<ref href="(?P<url>[^"]+)"',
 				'template'	:	'#\n%(url)s'}],
-		[#UR-play.se
-			{	're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
+		[
+			{	'service-name':		'UR-play',
+				're'		:	r'(?:http://)?(?:www.)?urplay.se/(?P<url>.+)',
 				'template'	:	'http://urplay.se/%(url)s'},
 			{	're'		:	r'file=/(?P<url>[^&]+(?P<ext>mp[34]))(?:.*?captions.file=(?P<sub>[^&]+))?',
 				'template'	:	'#subtitles: %(sub)s;\nrtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand -o %(output_file)s'}],
@@ -41,7 +42,7 @@ service = [
 			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
 				'template'	:	'%(url)s'},
 			{	're'		:	r'<Url>(?P<url>[^<]+)',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
 		[#Aftonbladet-TV
 			{	're'		:	r'(?:http://)?(?:www.)?aftonbladet.se/(?P<url>.+)',
 				'template'	:	'http://aftonbladet.se/%(url)s'},
