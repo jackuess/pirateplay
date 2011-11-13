@@ -18,7 +18,7 @@ def remove_duplicates(cmds):
 
 def convert_rtmpdump(rtmpdump_cmd, convert):
 	# Do we realy want to convert?
-	if convert and rtmpdump_cmd[8:] == 'rtmpdump':
+	if convert and rtmpdump_cmd[:8] == 'rtmpdump':
 		meta, cmd = rtmpdump_cmd.split('\n')
 		args = cmd[9:].split() # Strip 'rtmpdump ' and split
 		optlist = getopt.getopt(args, 'r:o:W:y:a:', ['rtmp=', 'swfVfy=', 'playpath=', 'app='])[0]
