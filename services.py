@@ -61,14 +61,14 @@ service = [
 				'template'	:	'http://vimeo.com/%(url)s'},
 			{
 				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
-				're'		:	r'"signature":"(?P<sig>[^"]+)".*?timestamp":(?P<time>\d+)',
-				'template'	:	'http://player.vimeo.com/play_redirect?clip_id=%(url)s&sig=%(sig)s&time=%(time)s&quality=hd&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location='},
+				're'		:	r'"signature":"(?P<sig>[^"]+)".*?timestamp":(?P<time>\d+).*?h264":\["(?P<quality>[^"]+)',
+				'template'	:	'http://player.vimeo.com/play_redirect?clip_id=%(url)s&sig=%(sig)s&time=%(time)s&quality=%(quality)s&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location='},
 			{
 				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
 				're'		:	r'Location: (?P<url>.*?)\n',
-				'template'	:	'#\n%(url)s'}],
+				'template'	:	'#quality: %(quality)s;\n%(url)s'}],
 		[
-			{	'service-name':		'Kanal5-play',
+			{	'service-name':		'Kanal5-play, Kanal9-play',
 				're'		:	r'(http://)?(www\.)?kanal(?P<n>5|9)play.se/(?P<url>.+)',
 				'template'	:	'http://kanal%(n)splay.se/%(url)s'},
 			{	're'		:	r'@videoPlayer" value="(?P<video_player>[^"]+)"',
