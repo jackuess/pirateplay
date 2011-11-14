@@ -16,6 +16,11 @@ service = [
 			#	'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
 			{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
 				'template'	:	'#\n%(url)s'}],
+		[#SVT-play-alternate/flv clip-rtmp
+			{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+				'template'	:	'http://svtplay.se/%(url)s'},
+			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)pathflv=(?P<url>rtmpe?://[^&]+)',
+				'template'	:	'#\nrtmpdump -W "http://svtplay.se%(swf_url)s" -r "%(url)s" -o %(output_file)s'}],
 		[
 			{	'service-name':		'SR',
 				're'		:	r'(http://)?(www\.)?sverigesradio.se/(?P<url>.+)',
