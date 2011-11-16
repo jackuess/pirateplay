@@ -80,7 +80,12 @@ service = [
 				'template'	:	'kanal5://%(video_player)s'},
 			{
 				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^"]+)";',
-				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy "http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf" -r %(URL)s -y %(path)s -o %(output_file)s'}],
+				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r %(URL)s -y %(path)s -o %(output_file)s'}],
+		[
+			{	're':			r'(http://)?(www\.)?redtube.com/(?P<path>.+)',
+				'template':		'http://redtube.com/%(path)s'},
+			{	're':			'<source src="(?P<url>[^"]+)"',
+				'template':		'#\n%(url)s'}],
 		[
 			{	'service-name':		'Axess-TV',
 				're'		:	r'(http://)?(www\.)?axess.se/(?P<url>.+)',
