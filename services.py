@@ -91,4 +91,10 @@ service = [
 				're'		:	r'(http://)?(www\.)?axess.se/(?P<url>.+)',
 				'template'	:	'http://axess.se/%(url)s'},
 			{	're'		:	r'url: \'(?P<url>[^\']+)\'.*netConnectionUrl: \'(?P<base>[^\']+)',
-				'template'	:	'#\nrtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}]]
+				'template'	:	'#\nrtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}],
+		[
+			{	'service-name':		'VGTV',
+				're':			r'(http://)?(www\.)?vgtv.no/#!?id=(?P<id>\d+)',
+				'template':		'http://www.vgtv.no/data/actions/videostatus/?id=%(id)s'},
+			{	're':			r'"bitrate":(?P<bitrate>\d+).*?"address":"(?P<address>[^"]+)","port":80,"application":"","path":"download\\(?P<path1>[^\\]+)\\(?P<path2>[^\\]+).*?","filename":"(?P<filename>[^"]+)"',
+				'template':		'#quality: %(bitrate)s\nhttp://%(address)s:80/download%(path1)s%(path2)s/vgtv/streaming/compressed/%(id)s/%(filename)s'}]]
