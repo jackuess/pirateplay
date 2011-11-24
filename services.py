@@ -97,4 +97,10 @@ service = [
 				're':			r'(http://)?(www\.)?vgtv.no/#!?id=(?P<id>\d+)',
 				'template':		'http://www.vgtv.no/data/actions/videostatus/?id=%(id)s'},
 			{	're':			r'"bitrate":(?P<bitrate>\d+).*?"address":"(?P<address>[^"]+)","port":80,"application":"","path":"download\\(?P<path1>[^\\]+)\\(?P<path2>[^\\]+).*?","filename":"(?P<filename>[^"]+)"',
-				'template':		'#quality: %(bitrate)s\nhttp://%(address)s:80/download%(path1)s%(path2)s/vgtv/streaming/compressed/%(id)s/%(filename)s'}]]
+				'template':		'#quality: %(bitrate)s\nhttp://%(address)s:80/download%(path1)s%(path2)s/vgtv/streaming/compressed/%(id)s/%(filename)s'}],
+		[
+			{	'service-name':		'ABF Play',
+				're':			r'(http://)?(www\.)?abfplay.se/#(?P<id>.+)',
+				'template':		'http://csp.picsearch.com/rest?jsonp=ps.responseHandler&eventParam=3&auth=r4MlmWY4CCH4AS_Z41gYqik4B37w5SQxkPkTiN2zCLqY8abCNEEDvA&method=embed&containerId=mediaplayer&mediaid=%(id)s&autoplay=true&player=rutile&width=620&height=430'},
+			{	're':			r'"url": "rtmp%3A//rtmp.picsearch.com/content/(?P<url>[^"]+)%3F',
+				'template':		'#\nrtmpdump -r rtmp://rtmp.picsearch.com/content -a content -W http://csp.picsearch.com/players/rutile.swf -y %(url)s -o %(output_file)s'}]]
