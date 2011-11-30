@@ -103,4 +103,11 @@ service = [
 				're':			r'(http://)?(www\.)?abfplay.se/#(?P<id>.+)',
 				'template':		'http://csp.picsearch.com/rest?jsonp=ps.responseHandler&eventParam=3&auth=r4MlmWY4CCH4AS_Z41gYqik4B37w5SQxkPkTiN2zCLqY8abCNEEDvA&method=embed&containerId=mediaplayer&mediaid=%(id)s&autoplay=true&player=rutile&width=620&height=430'},
 			{	're':			r'"url": "rtmp%3A//rtmp.picsearch.com/content/(?P<url>[^"]+)%3F',
-				'template':		'#\nrtmpdump -r rtmp://rtmp.picsearch.com/content -a content -W http://csp.picsearch.com/players/rutile.swf -y %(url)s -o %(output_file)s'}]]
+				'template':		'#\nrtmpdump -r rtmp://rtmp.picsearch.com/content -a content -W http://csp.picsearch.com/players/rutile.swf -y %(url)s -o %(output_file)s'}],
+		[
+			{	'service-name':		'Youtube',
+				're':			r'(http://)?(www\.)?youtube.com/(?P<url>.+)',
+				'template':		'http://youtube.com/%(url)s'},
+			{	're':			r'url%3D(?P<url>.*?)%26quality%3D(?P<quality>.*?)%26',
+				'template':		'#quality: %(quality)s\n%(url)s',
+				'decode-url':		2}]]

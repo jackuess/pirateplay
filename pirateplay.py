@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import cStringIO, getopt, urllib2, re, sys
+from urllib import unquote
 from services import service
 from kanal5 import get_kanal5
 
@@ -52,6 +53,8 @@ def generate_getcmd(url, librtmp = False, **args):
 			for match in re.finditer(item['re'], content, re.DOTALL):
 				match_vars.update(del_nones(match.groupdict()))
 				next_url = item['template'] % match_vars
+				for i in range(item.get('decode-url', 0)):
+					next_url = unquote(next_url)
 				req = urllib2.Request(next_url)
 				if item.has_key('user-agent-string'):
 					req.add_header('User-Agent', item['user-agent-string'])
