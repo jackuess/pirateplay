@@ -112,7 +112,7 @@ service = [
 				'template':		'#quality: %(quality)s\n%(url)s',
 				'decode-url':		2}],
 		[
-			{	'service-name':		'NRK',
+			{	'service-name':		'NRK nett-TV',
 				'headers':		{'Cookie': 'NetTV2.0Speed=7336'},
 				're':			r'(http://)?(www\.)?nrk.no/nett-tv/(?P<url>.+)',
 				'template':		'http://nrk.no/nett-tv/%(url)s'},
