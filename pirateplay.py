@@ -52,12 +52,15 @@ def generate_getcmd(url, librtmp = False, **args):
 		for item in channel_service:
 			for match in re.finditer(item['re'], content, re.DOTALL):
 				match_vars.update(del_nones(match.groupdict()))
+				
 				next_url = item['template'] % match_vars
 				for i in range(item.get('decode-url', 0)):
 					next_url = unquote(next_url)
 				req = urllib2.Request(next_url)
-				if item.has_key('user-agent-string'):
-					req.add_header('User-Agent', item['user-agent-string'])
+				
+				for header, value in item.get('headers', {}).items():
+					req.add_header(header, value)
+				
 				try:
 					content = urllib2.urlopen(req).read()
 				except urllib2.URLError: #Kanal5

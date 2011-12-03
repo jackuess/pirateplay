@@ -61,15 +61,15 @@ service = [
 		[
 			{
 				'service-name':		'Vimeo',
-				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
+				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
 				're'		:	r'(http://)?(www\.)?vimeo.com/(?P<url>.+)',
 				'template'	:	'http://vimeo.com/%(url)s'},
 			{
-				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
+				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
 				're'		:	r'"signature":"(?P<sig>[^"]+)".*?timestamp":(?P<time>\d+).*?h264":\["(?P<quality>[^"]+)',
 				'template'	:	'http://player.vimeo.com/play_redirect?clip_id=%(url)s&sig=%(sig)s&time=%(time)s&quality=%(quality)s&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location='},
 			{
-				'user-agent-string':	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36',
+				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
 				're'		:	r'Location: (?P<url>.*?)\n',
 				'template'	:	'#quality: %(quality)s;\n%(url)s'}],
 		[
@@ -99,7 +99,7 @@ service = [
 			{	're':			r'"bitrate":(?P<bitrate>\d+).*?"address":"(?P<address>[^"]+)","port":80,"application":"","path":"download\\(?P<path1>[^\\]+)\\(?P<path2>[^\\]+).*?","filename":"(?P<filename>[^"]+)"',
 				'template':		'#quality: %(bitrate)s\nhttp://%(address)s:80/download%(path1)s%(path2)s/vgtv/streaming/compressed/%(id)s/%(filename)s'}],
 		[
-			{	'service-name':		'ABF Play',
+			{	'service-name':		'ABF-play',
 				're':			r'(http://)?(www\.)?abfplay.se/#(?P<id>.+)',
 				'template':		'http://csp.picsearch.com/rest?jsonp=ps.responseHandler&eventParam=3&auth=r4MlmWY4CCH4AS_Z41gYqik4B37w5SQxkPkTiN2zCLqY8abCNEEDvA&method=embed&containerId=mediaplayer&mediaid=%(id)s&autoplay=true&player=rutile&width=620&height=430'},
 			{	're':			r'"url": "rtmp%3A//rtmp.picsearch.com/content/(?P<url>[^"]+)%3F',
@@ -110,4 +110,13 @@ service = [
 				'template':		'http://youtube.com/%(url)s'},
 			{	're':			r'url%3D(?P<url>.*?)%26quality%3D(?P<quality>.*?)%26',
 				'template':		'#quality: %(quality)s\n%(url)s',
-				'decode-url':		2}]]
+				'decode-url':		2}],
+		[
+			{	'service-name':		'NRK',
+				'headers':		{'Cookie': 'NetTV2.0Speed=7336'},
+				're':			r'(http://)?(www\.)?nrk.no/nett-tv/(?P<url>.+)',
+				'template':		'http://nrk.no/nett-tv/%(url)s'},
+			{	're':			r'name="Url" value="(?P<url>[^"]+)',
+				'template':		'%(url)s'},
+			{	're':			r'href="(?P<url>mms://[^"]+)"',
+				'template':		'#\n%(url)s'}]]
