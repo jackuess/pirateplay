@@ -1,3 +1,6 @@
+def remove_slashes(url):
+	return url.replace('\\', '')
+
 service = [
 		[
 			{	'service-name':		'SVT-play',
@@ -119,4 +122,15 @@ service = [
 			{	're':			r'name="Url" value="(?P<url>[^"]+)',
 				'template':		'%(url)s'},
 			{	're':			r'href="(?P<url>mms://[^"]+)"',
-				'template':		'#\n%(url)s'}]]
+				'template':		'#\n%(url)s'}],
+		[
+			{	'service-name':		'DR NU',
+				're':			r'(http://)?(www\.)?dr\.dk/nu/player/#/(?P<title>[^/]+)/(?P<id>\d+).*',
+				'template':		'http://www.dr.dk/nu/api/programseries/%(title)s/videos'},
+			{
+				're':			r'"id": %(id)s,[^}]+"videoResourceUrl": "(?P<url>[^"]+)"',
+				'template':		'%(url)s'},
+			{
+				're':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf',
+				'decode':		lambda url: url.replace('\\', '')}]]

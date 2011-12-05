@@ -50,12 +50,15 @@ def generate_getcmd(url, librtmp = False, **args):
 		match_vars.update(args)
 		content = url
 		for item in channel_service:
-			for match in re.finditer(item['re'], content, re.DOTALL):
+			next_re = item['re'] % match_vars
+			for match in re.finditer(next_re, content, re.DOTALL):
+			#for match in re.finditer(item['re'], content, re.DOTALL):
 				match_vars.update(del_nones(match.groupdict()))
 				
 				next_url = item['template'] % match_vars
 				for i in range(item.get('decode-url', 0)):
 					next_url = unquote(next_url)
+				next_url = item.get('decode', lambda (url): url)(next_url)
 				req = urllib2.Request(next_url)
 				
 				for header, value in item.get('headers', {}).items():
