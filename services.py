@@ -1,5 +1,7 @@
-def remove_slashes(url):
-	return url.replace('\\', '')
+from urllib import unquote
+
+def fix_playpath(url):
+	return url.replace('/mp4:', '/ -y mp4:')
 
 service = [
 		[
@@ -47,14 +49,16 @@ service = [
 				're'		:	r'(http://)?(www\.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
 			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>rtmp[^\]]+)',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s',
+				'decode':		fix_playpath}],
 		[#MTG-alternate
 			{	're'		:	r'(http://)?(www\.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
 			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
 				'template'	:	'%(url)s'},
 			{	're'		:	r'<Url>(?P<url>[^<]+)',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s'}],
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s',
+				'decode':		fix_playpath}],
 		[
 			{	'service-name':		'Aftonbladet-TV',
 				're'		:	r'(http://)?(www\.)?aftonbladet.se/(?P<url>.+)',
@@ -105,7 +109,7 @@ service = [
 			{	'service-name':		'ABF-play',
 				're':			r'(http://)?(www\.)?abfplay.se/#(?P<id>.+)',
 				'template':		'http://csp.picsearch.com/rest?jsonp=ps.responseHandler&eventParam=3&auth=r4MlmWY4CCH4AS_Z41gYqik4B37w5SQxkPkTiN2zCLqY8abCNEEDvA&method=embed&containerId=mediaplayer&mediaid=%(id)s&autoplay=true&player=rutile&width=620&height=430'},
-			{	're':			r'"url": "rtmp%3A//rtmp.picsearch.com/content/(?P<url>[^"]+)%3F',
+			{	're':			r'"url": "rtmp%%3A//rtmp.picsearch.com/content/(?P<url>[^"]+)%%3F',
 				'template':		'#\nrtmpdump -r rtmp://rtmp.picsearch.com/content -a content -W http://csp.picsearch.com/players/rutile.swf -y %(url)s -o %(output_file)s'}],
 		[
 			{	'service-name':		'Youtube',
@@ -113,7 +117,7 @@ service = [
 				'template':		'http://youtube.com/%(url)s'},
 			{	're':			r'url%%3D(?P<url>.*?)%%26quality%%3D(?P<quality>.*?)%%26',
 				'template':		'#quality: %(quality)s\n%(url)s',
-				'decode-url':		2}],
+				'decode':		lambda url: unquote(unquote(url))}],
 		[
 			{	'service-name':		'NRK nett-TV',
 				'headers':		{'Cookie': 'NetTV2.0Speed=7336'},
@@ -133,4 +137,4 @@ service = [
 			{
 				're':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
 				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf',
-				'decode':		lambda url: url.replace('\\', '')}]]
+				'decode':		lambda url: fix_playpath(url.replace('\\', ''))}]]

@@ -1,7 +1,6 @@
 #!/usr/bin/python2
 
 import cStringIO, getopt, urllib2, re, sys
-from urllib import unquote
 from services import service
 from kanal5 import get_kanal5
 
@@ -52,12 +51,9 @@ def generate_getcmd(url, librtmp = False, **args):
 		for item in channel_service:
 			next_re = item['re'] % match_vars
 			for match in re.finditer(next_re, content, re.DOTALL):
-			#for match in re.finditer(item['re'], content, re.DOTALL):
 				match_vars.update(del_nones(match.groupdict()))
 				
 				next_url = item['template'] % match_vars
-				for i in range(item.get('decode-url', 0)):
-					next_url = unquote(next_url)
 				next_url = item.get('decode', lambda (url): url)(next_url)
 				req = urllib2.Request(next_url)
 				
@@ -73,7 +69,6 @@ def generate_getcmd(url, librtmp = False, **args):
 						yielded = True
 						yield convert_rtmpdump(next_url, librtmp)
 				except ValueError:
-					next_url = next_url.replace('/mp4:', '/ -y mp4:') #Add playpath when needed, in a hackish manner
 					yielded = True
 					yield convert_rtmpdump(next_url, librtmp)
 			else:
