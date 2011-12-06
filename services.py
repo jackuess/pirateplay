@@ -111,7 +111,7 @@ service = [
 			{	'service-name':		'Youtube',
 				're':			r'(http://)?(www\.)?youtube.com/(?P<url>.+)',
 				'template':		'http://youtube.com/%(url)s'},
-			{	're':			r'url%3D(?P<url>.*?)%26quality%3D(?P<quality>.*?)%26',
+			{	're':			r'url%%3D(?P<url>.*?)%%26quality%%3D(?P<quality>.*?)%%26',
 				'template':		'#quality: %(quality)s\n%(url)s',
 				'decode-url':		2}],
 		[
