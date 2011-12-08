@@ -64,17 +64,17 @@ service = [
 				're'		:	r'(http://)?(www\.)?aftonbladet.se/(?P<url>.+)',
 				'template'	:	'http://aftonbladet.se/%(url)s'},
 			{	're'		:	'videoUrl:\s"(?P<base>rtmp://(ss11i04.stream.ip-only.net|fl1.c00862.cdn.qbrick.com)/[^/]+/)(?P<url>[^"]+)"',
-				'template'	:	'#\nrtmpdump -r %(base)s -y %(url)s -o %(output_file)s'}],
+				'template'	:	'#\nrtmpdump -r "%(base)s" -y "%(url)s" -o "%(output_file)s"'}],
 		[
 			{
 				'service-name':		'Vimeo',
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
-				're'		:	r'(http://)?(www\.)?vimeo.com/(?P<url>.+)',
-				'template'	:	'http://vimeo.com/%(url)s'},
+				're'		:	r'(http://)?(www\.)?vimeo.com/.*?(?P<id>\d+)$',
+				'template'	:	'http://vimeo.com/%(id)s'},
 			{
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
 				're'		:	r'"signature":"(?P<sig>[^"]+)".*?timestamp":(?P<time>\d+).*?h264":\["(?P<quality>[^"]+)',
-				'template'	:	'http://player.vimeo.com/play_redirect?clip_id=%(url)s&sig=%(sig)s&time=%(time)s&quality=%(quality)s&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location='},
+				'template'	:	'http://player.vimeo.com/play_redirect?clip_id=%(id)s&sig=%(sig)s&time=%(time)s&quality=%(quality)s&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location='},
 			{
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36'},
 				're'		:	r'Location: (?P<url>.*?)\n',

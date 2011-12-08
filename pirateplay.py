@@ -19,19 +19,19 @@ def remove_duplicates(cmds):
 def convert_rtmpdump(rtmpdump_cmd, convert):
 	meta, cmd = rtmpdump_cmd.split('\n')
 	# Do we realy want to convert?
-	if convert and cmd[:8] == 'rtmpdump':
+	if convert and cmd.startswith('rtmpdump'):
 		args = cmd[9:].split() # Strip 'rtmpdump ' and split
 		optlist = getopt.getopt(args, 'r:o:W:y:a:', ['rtmp=', 'swfVfy=', 'playpath=', 'app='])[0]
 		rtmp_string = ""
-		for optpair in optlist:
-			if optpair[0] == '--rtmp' or optpair[0] == '-r':
-				rtmp_string = "%s%s" % (optpair[1], rtmp_string)
-			elif optpair[0] == '--swfVfy' or optpair[0] == '-W':
-				rtmp_string += ' swfVfy=1 swfUrl=' + optpair[1]
-			elif optpair[0] == '--playpath' or optpair[0] == '-y':
-				rtmp_string += ' playpath=' + optpair[1]
-			elif optpair[0] == '--app' or optpair[0] == '-a':
-				rtmp_string += ' app=' + optpair[1]
+		for option, value in optlist:
+			if option == '--rtmp' or option == '-r':
+				rtmp_string = "%s%s" % (value.strip('"'), rtmp_string)
+			elif option == '--swfVfy' or option == '-W':
+				rtmp_string += ' swfVfy=1 swfUrl=' + value.strip('"')
+			elif option == '--playpath' or option == '-y':
+				rtmp_string += ' playpath=' + value.strip('"')
+			elif option == '--app' or option == '-a':
+				rtmp_string += ' app=' + value.strip('"')
 		return meta + '\n' + rtmp_string
 	# ..or just pass through?
 	else:
@@ -63,7 +63,7 @@ def generate_getcmd(url, librtmp = False, **args):
 				try:
 					content = urllib2.urlopen(req).read()
 				except urllib2.URLError: #Kanal5
-					if next_url[:9] == 'kanal5://':
+					if next_url.startswith('kanal5://'):
 						content = get_kanal5(next_url[9:]).encode('ascii')
 					else:
 						yielded = True
