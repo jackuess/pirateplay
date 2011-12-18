@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import cStringIO, getopt, urllib2, re, sys
+from os import system
 from services import service
 from kanal5 import get_kanal5
 
@@ -57,6 +58,9 @@ def generate_getcmd(url, librtmp = False, **args):
 				next_url = item.get('decode', lambda (url): url)(next_url)
 				req = urllib2.Request(next_url)
 				
+				if 'post-template' in item:
+					req.add_data(item['post-template'] % match_vars)
+				
 				for header, value in item.get('headers', {}).items():
 					req.add_header(header, value)
 				
@@ -77,6 +81,35 @@ def generate_getcmd(url, librtmp = False, **args):
 		else:
 			if yielded: break
 
+
+class Modes:
+	Print, Play, Save = range(3)
+
 if __name__ == "__main__":
-	for cmd in remove_duplicates(generate_getcmd(sys.argv[1], False, output_file="-")):
-		print(cmd)
+	if system('which ffplay > /dev/null') != 0:
+		sys.exit('\nffplay not found.\nPirateplay needs ffplay to play your streams.')
+	
+	opts, values = getopt.getopt(sys.argv[1:], 'pys:', ['print', 'play', 'save='])
+	mode = Modes.Play
+	for option, value in opts:
+			if option == '--print' or option == '-p':
+				mode = Modes.Print
+			elif option == '--play' or option == '-y':
+				mode = Modes.Play
+			elif option == '--save' or option == '-s':
+				mode = Modes.Save
+	i = 0
+	exe = []
+	for cmd in remove_duplicates(generate_getcmd(sys.argv[len(sys.argv)-1], True, output_file="-")):
+		if mode == Modes.Print:
+			print cmd
+		else:
+			exe.append(None)
+			desc, exe[i] = cmd.splitlines()
+			i += 1
+			if desc == '#':
+				desc = '#Stream %d' % i
+			print('%d. %s' % (i, desc.strip('#')))
+	
+	if mode == Modes.Play:
+		system('ffplay "' + exe[int(raw_input('Choose stream: '))-1] + '"')

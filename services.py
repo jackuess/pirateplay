@@ -137,4 +137,18 @@ service = [
 			{
 				're':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
 				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf',
-				'decode':		lambda url: fix_playpath(url.replace('\\', ''))}]]
+				'decode':		lambda url: fix_playpath(url.replace('\\', ''))}],
+		[
+			{	'service-name':		'Ceskatelevize',
+				're':			r'(http://)?(www\.)?ceskatelevize\.cz/(?P<url>.+)',
+				'template':		'http://www.ceskatelevize.cz/%(url)s'},
+			{	're':			'IDEC="(?P<identifier>[^"]+)"',
+				'template':		'http://www.ceskatelevize.cz/ajax/playlistURL.php',
+				'post-template':	'options%%5BuserIP%%5D=85.226.8.253&options%%5BplayerType%%5D=flash&options%%5BplaylistItems%%5D%%5B0%%5D%%5BType%%5D=Ad&options%%5BplaylistItems%%5D%%5B0%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B0%%5D%%5BIdentifier%%5D=AD-46&options%%5BplaylistItems%%5D%%5B0%%5D%%5BTitle%%5D=Reklama%%3A+Adventn%%C3%%AD+kalend%%C3%%A1%%C5%%99&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BEnable%%5D=true&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BDelay%%5D=3&options%%5BplaylistItems%%5D%%5B0%%5D%%5BClickThruURL%%5D=http%%3A%%2F%%2Fadvent.ceskatelevize.cz%%2F&options%%5BplaylistItems%%5D%%5B1%%5D%%5BType%%5D=Archive&options%%5BplaylistItems%%5D%%5B1%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIdentifier%%5D=%(identifier)s&options%%5BplaylistItems%%5D%%5B1%%5D%%5BTitle%%5D=Vypr%%C3%%A1v%%C4%%9Bj&options%%5BplaylistItems%%5D%%5B1%%5D%%5BRegion%%5D=&options%%5BplaylistItems%%5D%%5B1%%5D%%5BSubtitlesUrl%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fivysilani%%2Fsubtitles%%2F211%%2F211522161400013%%2Fsubtitles-1.txt&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIndexes%%5D=null&options%%5BpreviewImageURL%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fcache%%2F512x288%%2Fivysilani%%2Fepisodes%%2Fphotos%%2Fw512%%2F10195164142%%2F1-62384.jpg'},
+			{	're':			'(?P<playlist_url>.+)',
+				'template':		'%(playlist_url)s',
+				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'}},
+			{	're':			r'(base="(?P<base>rtmp://[^/]+/)(?P<app>[^"]+)".*?)?src="(?P<play_path>[^"]+)".*?label="(?P<quality>[^"]+)"',
+				'template':		'#quality: %(quality)s\nrtmpdump -r "%(base)s" -a "%(app)s" -y "%(play_path)s" -W "http://img7.ceskatelevize.cz/libraries/player/flashPlayer.swf?version=1.44.5"',
+				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'},
+				'decode':		lambda url: url.replace('&amp;', '&')}]]
