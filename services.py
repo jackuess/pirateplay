@@ -2,6 +2,22 @@ from urllib import unquote
 
 def fix_playpath(url):
 	return url.replace('/mp4:', '/ -y mp4:')
+	
+def decrypt_pbs_url(url):
+	from Crypto.Cipher import AES
+	from base64 import decodestring
+	key = 'RPz~i4p*FQmx>t76'
+	method, iv, data= url.split("$", 3)
+	iv = iv.decode('hex')
+	data = decodestring(data)
+	if len(key) not in (16, 24, 32):
+		raise ValueError("Key must be 16, 24, or 32 bytes")
+	if (len(data) % 16) != 0:
+		raise ValueError("Message must be a multiple of 16 bytes")
+	if len(iv) != 16:
+		raise ValueError("IV must be 16 bytes")
+	cipher = AES.new(key, AES.MODE_CBC, iv)
+	return cipher.decrypt(data) + '&format=SMIL'
 
 service = [
 		[
@@ -157,4 +173,13 @@ service = [
 				're':			r'(http://)?(www\.)?tv\.expressen\.se(?P<url>.+)',
 				'template':		'http://tv.expressen.se/%(url)s?standAlone=true&output=xml'},
 			{	're':			r"<vurl bitrate='(?P<bitrate>\d+)'><!\[CDATA\[(?P<rtmp_url>[^\]]+)",
-				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf" -o %(output_file)s'}]]
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf" -o %(output_file)s'}],
+		[
+			{	'service-name':		'PBS',
+				're':			r'(http://)?video\.pbs\.org/video/(?P<id>\d+)',
+				'template':		'http://video.pbs.org/videoPlayerInfo/%(id)s'},
+			{	're':			r'<releaseURL>(?P<encrypted_url>[^<]+)',
+				'template':		'#\n%(encrypted_url)s',
+				'decode':		decrypt_pbs_url},
+			{	're':			r'<meta base="(?P<base>[^"]+).*?<ref src="(?P<path>[^"]+)',
+				'template':		'#\nrtmpdump -r "%(base)s" -y mp4:%(path)s -W "http://www-tc.pbs.org/s3/pbs.videoportal-prod.cdn/media/swf/PBSPlayer.swf" -o %(output_file)s'}]]
