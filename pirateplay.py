@@ -4,6 +4,7 @@ import cStringIO, getopt, urllib2, re, sys
 from os import system
 from services import service
 from kanal5 import get_kanal5
+from httplib import BadStatusLine
 
 def del_nones(dict):
 	for item in dict.items():
@@ -75,6 +76,9 @@ def generate_getcmd(url, librtmp = False, **args):
 				except ValueError:
 					yielded = True
 					yield convert_rtmpdump(next_url, librtmp)
+				except BadStatusLine:
+					yielded = True
+					break
 			else:
 				if content == url:
 					break
