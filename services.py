@@ -151,4 +151,10 @@ service = [
 			{	're':			r'(base="(?P<base>rtmp://[^/]+/)(?P<app>[^"]+)".*?)?src="(?P<play_path>[^"]+)".*?label="(?P<quality>[^"]+)"',
 				'template':		'#quality: %(quality)s\nrtmpdump -r "%(base)s" -a "%(app)s" -y "%(play_path)s" -W "http://img7.ceskatelevize.cz/libraries/player/flashPlayer.swf?version=1.44.5"',
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'},
-				'decode':		lambda url: url.replace('&amp;', '&')}]]
+				'decode':		lambda url: url.replace('&amp;', '&')}],
+		[
+			{	#'service-name':		'Expressen-TV',
+				're':			r'(http://)?(www\.)?tv\.expressen\.se(?P<url>.+)',
+				'template':		'http://tv.expressen.se/%(url)s?standAlone=true&output=xml'},
+			{	're':			r"<vurl bitrate='(?P<bitrate>\d+)'><!\[CDATA\[(?P<rtmp_url>[^\]]+)",
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf"'}]]
