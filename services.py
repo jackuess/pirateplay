@@ -136,7 +136,7 @@ service = [
 				'template':		'%(url)s'},
 			{
 				're':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
-				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf',
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf-o %(output_file)s',
 				'decode':		lambda url: fix_playpath(url.replace('\\', ''))}],
 		[
 			{	'service-name':		'Ceskatelevize',
@@ -149,7 +149,7 @@ service = [
 				'template':		'%(playlist_url)s',
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'}},
 			{	're':			r'(base="(?P<base>rtmp://[^/]+/)(?P<app>[^"]+)".*?)?src="(?P<play_path>[^"]+)".*?label="(?P<quality>[^"]+)"',
-				'template':		'#quality: %(quality)s\nrtmpdump -r "%(base)s" -a "%(app)s" -y "%(play_path)s" -W "http://img7.ceskatelevize.cz/libraries/player/flashPlayer.swf?version=1.44.5"',
+				'template':		'#quality: %(quality)s\nrtmpdump -r "%(base)s" -a "%(app)s" -y "%(play_path)s" -W "http://img7.ceskatelevize.cz/libraries/player/flashPlayer.swf?version=1.44.5"-o %(output_file)s',
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'},
 				'decode':		lambda url: url.replace('&amp;', '&')}],
 		[
@@ -157,4 +157,4 @@ service = [
 				're':			r'(http://)?(www\.)?tv\.expressen\.se(?P<url>.+)',
 				'template':		'http://tv.expressen.se/%(url)s?standAlone=true&output=xml'},
 			{	're':			r"<vurl bitrate='(?P<bitrate>\d+)'><!\[CDATA\[(?P<rtmp_url>[^\]]+)",
-				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf"'}]]
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf"-o %(output_file)s'}]]
