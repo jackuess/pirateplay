@@ -59,7 +59,7 @@ service = [
 				're'		:	r'(http://)?(www\.)?tv4play.se/.*videoid=(?P<id>\d+).*',
 				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
 			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)(?=.*?(?P<sub>http://anytime.tv4.se/multimedia/vman/smiroot/[^<]+))?',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://www.tv4play.se/flash/tv4playflashlets.swf -r %(base)s -y %(url)s -o %(output_file)s'}],
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W "http://www.tv4play.se/flash/tv4playflashlets.swf" -r "%(base)s" -y "%(url)s" -o "%(output_file)s"'}],
 		[
 			{	'service-name':		'MTG',
 				're'		:	r'(http://)?(www\.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
@@ -104,11 +104,6 @@ service = [
 			{
 				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^"]+)";',
 				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r %(URL)s -y %(path)s -o %(output_file)s'}],
-		[
-			{	're':			r'(http://)?(www\.)?redtube.com/(?P<path>.+)',
-				'template':		'http://redtube.com/%(path)s'},
-			{	're':			'<source src="(?P<url>[^"]+)"',
-				'template':		'#\n%(url)s'}],
 		[
 			{	'service-name':		'Axess-TV',
 				're'		:	r'(http://)?(www\.)?axess.se/(?P<url>.+)',
@@ -160,7 +155,8 @@ service = [
 				'template':		'http://www.ceskatelevize.cz/%(url)s'},
 			{	're':			'IDEC="(?P<identifier>[^"]+)"',
 				'template':		'http://www.ceskatelevize.cz/ajax/playlistURL.php',
-				'post-template':	'options%%5BuserIP%%5D=85.226.8.253&options%%5BplayerType%%5D=flash&options%%5BplaylistItems%%5D%%5B0%%5D%%5BType%%5D=Ad&options%%5BplaylistItems%%5D%%5B0%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B0%%5D%%5BIdentifier%%5D=AD-46&options%%5BplaylistItems%%5D%%5B0%%5D%%5BTitle%%5D=Reklama%%3A+Adventn%%C3%%AD+kalend%%C3%%A1%%C5%%99&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BEnable%%5D=true&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BDelay%%5D=3&options%%5BplaylistItems%%5D%%5B0%%5D%%5BClickThruURL%%5D=http%%3A%%2F%%2Fadvent.ceskatelevize.cz%%2F&options%%5BplaylistItems%%5D%%5B1%%5D%%5BType%%5D=Archive&options%%5BplaylistItems%%5D%%5B1%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIdentifier%%5D=%(identifier)s&options%%5BplaylistItems%%5D%%5B1%%5D%%5BTitle%%5D=Vypr%%C3%%A1v%%C4%%9Bj&options%%5BplaylistItems%%5D%%5B1%%5D%%5BRegion%%5D=&options%%5BplaylistItems%%5D%%5B1%%5D%%5BSubtitlesUrl%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fivysilani%%2Fsubtitles%%2F211%%2F211522161400013%%2Fsubtitles-1.txt&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIndexes%%5D=null&options%%5BpreviewImageURL%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fcache%%2F512x288%%2Fivysilani%%2Fepisodes%%2Fphotos%%2Fw512%%2F10195164142%%2F1-62384.jpg'},
+				'post-template':	'options%%5BuserIP%%5D=85.226.8.253&options%%5BplayerType%%5D=flash&options%%5BplaylistItems%%5D%%5B0%%5D%%5BType%%5D=Ad&options%%5BplaylistItems%%5D%%5B0%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B0%%5D%%5BIdentifier%%5D=AD-46&options%%5BplaylistItems%%5D%%5B0%%5D%%5BTitle%%5D=Reklama%%3A+Adventn%%C3%%AD+kalend%%C3%%A1%%C5%%99&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BEnable%%5D=true&options%%5BplaylistItems%%5D%%5B0%%5D%%5BSkip%%5D%%5BDelay%%5D=3&options%%5BplaylistItems%%5D%%5B0%%5D%%5BClickThruURL%%5D=' +
+							'http%%3A%%2F%%2Fadvent.ceskatelevize.cz%%2F&options%%5BplaylistItems%%5D%%5B1%%5D%%5BType%%5D=Archive&options%%5BplaylistItems%%5D%%5B1%%5D%%5BFormat%%5D=MP4_Web&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIdentifier%%5D=%(identifier)s&options%%5BplaylistItems%%5D%%5B1%%5D%%5BTitle%%5D=Vypr%%C3%%A1v%%C4%%9Bj&options%%5BplaylistItems%%5D%%5B1%%5D%%5BRegion%%5D=&options%%5BplaylistItems%%5D%%5B1%%5D%%5BSubtitlesUrl%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fivysilani%%2Fsubtitles%%2F211%%2F211522161400013%%2Fsubtitles-1.txt&options%%5BplaylistItems%%5D%%5B1%%5D%%5BIndexes%%5D=null&options%%5BpreviewImageURL%%5D=http%%3A%%2F%%2Fimg7.ceskatelevize.cz%%2Fcache%%2F512x288%%2Fivysilani%%2Fepisodes%%2Fphotos%%2Fw512%%2F10195164142%%2F1-62384.jpg'},
 			{	're':			'(?P<playlist_url>.+)',
 				'template':		'%(playlist_url)s',
 				'headers':		{'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0'}},
@@ -179,7 +175,29 @@ service = [
 				're':			r'(http://)?video\.pbs\.org/video/(?P<id>\d+)',
 				'template':		'http://video.pbs.org/videoPlayerInfo/%(id)s'},
 			{	're':			r'<releaseURL>(?P<encrypted_url>[^<]+)',
-				'template':		'#\n%(encrypted_url)s',
+				'template':		'%(encrypted_url)s',
 				'decode':		decrypt_pbs_url},
 			{	're':			r'<meta base="(?P<base>[^"]+).*?<ref src="(?P<path>[^"]+)',
-				'template':		'#\nrtmpdump -r "%(base)s" -y mp4:%(path)s -W "http://www-tc.pbs.org/s3/pbs.videoportal-prod.cdn/media/swf/PBSPlayer.swf" -o %(output_file)s'}]]
+				'template':		'#\nrtmpdump -r "%(base)s" -y mp4:%(path)s -W "http://www-tc.pbs.org/s3/pbs.videoportal-prod.cdn/media/swf/PBSPlayer.swf" -o %(output_file)s'}],
+		[
+			{	're':			r'(http://)?headweb\.com/(?P<path>.*)',
+				'template':		'http://headweb.com/%(path)s'},
+			{	're':			r'\sid:(?P<id>\d+),',
+				'template':		'http://api.headweb.com/v4/stream/%(id)s?apikey=d91b8d77fe2f4c3dbbebbad9ea5dd201&authmode=raw'},
+			{	're':			r'(<streamurl>(?P<base>[^<]+).*?<streamid>\d+\?(?P<stream_id>[^<]+).*?)?<bitrate rate="(?P<bitrate>\d+)"',
+				'template':		'#quality: %(bitrate)s kbps\nrtmpdump -r "%(base)s" -y "%(id)s_%(bitrate)s?%(stream_id)s" -W "http://sc.headweb.com/.c2089/flash/headwebplayer.swf" -o %(output_file)s'}],
+		[
+			{	're':			r'(http://)?headweb\.com/(?P<path>.*)',
+				'template':		'http://headweb.com/%(path)s'},
+			{	're':			r'\sid:(?P<id>\d+),',
+				'template':		'http://api.headweb.com/v4/stream/%(id)s?apikey=d91b8d77fe2f4c3dbbebbad9ea5dd201&authmode=raw'},
+			{	're':			r'<streamurl>(?P<base>[^<]+).*?<streamid>\d+\?(?P<stream_id>[^<]+).*?',
+				'template':		'#\nrtmpdump -r "%(base)s" -y "%(id)s?%(stream_id)s" -W "http://sc.headweb.com/.c2089/flash/headwebplayer.swf" -o %(output_file)s'}],
+		[
+			{	're':			r'(http://)?((www|video)\.)?.cnbc.com/.*video=(?P<video>\d+).*',
+				'template':		'http://video.cnbc.com/gallery/?video=%(video)s'},
+			{	're':			r',formatLink:\'[^|]+\|(?P<xml_url>[^\']+)',
+				'template':		'%(xml_url)s'},
+			{	're':			r'<choice>\s*<url>(?P<rtmp_url>rtm.+?)</url>',
+				'template':		'#\nrtmpdump -r "%(rtmp_url)s"'}]
+]

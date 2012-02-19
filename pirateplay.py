@@ -45,6 +45,7 @@ class redirect_handler(urllib2.HTTPRedirectHandler):
 
 def generate_getcmd(url, librtmp = False, **args):
 	yielded = False
+ 	#urllib2.install_opener(urllib2.build_opener(urllib2.HTTPHandler(debuglevel=1)))
 	urllib2.install_opener(urllib2.build_opener(redirect_handler()))
 	for channel_service in service:
 		match_vars = {'sub' : ''}
@@ -66,7 +67,9 @@ def generate_getcmd(url, librtmp = False, **args):
 					req.add_header(header, value)
 				
 				try:
-					content = urllib2.urlopen(req).read()
+					response = urllib2.urlopen(req)
+					content = response.read()
+					response.close()
 				except urllib2.URLError: #Kanal5
 					if next_url.startswith('kanal5://'):
 						content = get_kanal5(next_url[9:]).encode('ascii')
@@ -76,7 +79,7 @@ def generate_getcmd(url, librtmp = False, **args):
 				except ValueError:
 					yielded = True
 					yield convert_rtmpdump(next_url, librtmp)
-				except BadStatusLine:
+				except BadStatusLine as excp:
 					yielded = True
 					break
 			else:
