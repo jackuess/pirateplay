@@ -178,26 +178,18 @@ service = [
 				'template':		'%(encrypted_url)s',
 				'decode':		decrypt_pbs_url},
 			{	're':			r'<meta base="(?P<base>[^"]+).*?<ref src="(?P<path>[^"]+)',
-				'template':		'#\nrtmpdump -r "%(base)s" -y mp4:%(path)s -W "http://www-tc.pbs.org/s3/pbs.videoportal-prod.cdn/media/swf/PBSPlayer.swf" -o %(output_file)s'}],
-		[
-			{	're':			r'(http://)?headweb\.com/(?P<path>.*)',
-				'template':		'http://headweb.com/%(path)s'},
-			{	're':			r'\sid:(?P<id>\d+),',
-				'template':		'http://api.headweb.com/v4/stream/%(id)s?apikey=d91b8d77fe2f4c3dbbebbad9ea5dd201&authmode=raw'},
-			{	're':			r'(<streamurl>(?P<base>[^<]+).*?<streamid>\d+\?(?P<stream_id>[^<]+).*?)?<bitrate rate="(?P<bitrate>\d+)"',
-				'template':		'#quality: %(bitrate)s kbps\nrtmpdump -r "%(base)s" -y "%(id)s_%(bitrate)s?%(stream_id)s" -W "http://sc.headweb.com/.c2089/flash/headwebplayer.swf" -o %(output_file)s'}],
-		[
-			{	're':			r'(http://)?headweb\.com/(?P<path>.*)',
-				'template':		'http://headweb.com/%(path)s'},
-			{	're':			r'\sid:(?P<id>\d+),',
-				'template':		'http://api.headweb.com/v4/stream/%(id)s?apikey=d91b8d77fe2f4c3dbbebbad9ea5dd201&authmode=raw'},
-			{	're':			r'<streamurl>(?P<base>[^<]+).*?<streamid>\d+\?(?P<stream_id>[^<]+).*?',
-				'template':		'#\nrtmpdump -r "%(base)s" -y "%(id)s?%(stream_id)s" -W "http://sc.headweb.com/.c2089/flash/headwebplayer.swf" -o %(output_file)s'}],
+				'template':		'#\nrtmpdump -r "%(base)s" -y mp4:%(path)s -W "http://www-tc.pbs.org/s3/pbs.videoportal-prod.cdn/media/swf/PBSPlayer.swf" -o "%(output_file)s"'}],
 		[
 			{	're':			r'(http://)?((www|video)\.)?.cnbc.com/.*video=(?P<video>\d+).*',
 				'template':		'http://video.cnbc.com/gallery/?video=%(video)s'},
 			{	're':			r',formatLink:\'[^|]+\|(?P<xml_url>[^\']+)',
 				'template':		'%(xml_url)s'},
 			{	're':			r'<choice>\s*<url>(?P<rtmp_url>rtm.+?)</url>',
-				'template':		'#\nrtmpdump -r "%(rtmp_url)s"'}]
+				'template':		'#\nrtmpdump -r "%(rtmp_url)s"'}],
+		[
+			{	'service-name':		'Filmarkivet',
+				're':			'(http://)?(www\.)?filmarkivet.se/(?P<path>.*)',
+				'template':		'http://filmarkivet.se/%(path)s'},
+			{	're':			r"movieName\s=\s'(?P<movie_name>[^']+)'.*?streamer:\s'(?P<base>[^']+)'",
+				'template':		'#\nrtmpdump -r "%(base)s%(movie_name)s" -o "%(output_file)s"'}]
 ]
