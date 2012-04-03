@@ -56,7 +56,13 @@ service = [
 				'template'	:	'#subtitles: %(sub)s;\nrtmpdump -r rtmp://streaming.ur.se/ -y %(ext)s:/%(url)s -a ondemand -o %(output_file)s'}],
 		[
 			{	'service-name':		'TV4-play',
-				're'		:	r'(http://)?(www\.)?tv4play.se/.*videoid=(?P<id>\d+).*',
+				're'		:	r'(http://)?(www\.)?tv4play.se/.*(videoid|vid)=(?P<id>\d+).*',
+				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
+			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)(?=.*?(?P<sub>http://anytime.tv4.se/multimedia/vman/smiroot/[^<]+))?',
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W "http://www.tv4play.se/flash/tv4playflashlets.swf" -r "%(base)s" -y "%(url)s" -o "%(output_file)s"'}],
+		[
+			{	'service-name':		'Fotbollskanalen',
+				're'		:	r'(http://)?(www\.)?fotbollskanalen.se/.*(videoid|vid)=(?P<id>\d+).*',
 				'template'	:	'http://premium.tv4play.se/api/web/asset/%(id)s/play'},
 			{	're'		:	r'(<playbackStatus>(?P<status>\w+).*?)?<bitrate>(?P<bitrate>[0-9]+)</bitrate>.*?(?P<base>rtmpe?://[^<]+).*?(?P<url>mp4:/[^<]+)(?=.*?(?P<sub>http://anytime.tv4.se/multimedia/vman/smiroot/[^<]+))?',
 				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W "http://www.tv4play.se/flash/tv4playflashlets.swf" -r "%(base)s" -y "%(url)s" -o "%(output_file)s"'}],
