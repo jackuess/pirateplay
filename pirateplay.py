@@ -23,7 +23,7 @@ def convert_rtmpdump(rtmpdump_cmd, convert):
 	# Do we realy want to convert?
 	if convert and cmd.startswith('rtmpdump'):
 		args = cmd[9:].split() # Strip 'rtmpdump ' and split
-		optlist = getopt.getopt(args, 'r:o:W:y:a:', ['rtmp=', 'swfVfy=', 'playpath=', 'app='])[0]
+		optlist = getopt.getopt(args, 'r:o:W:y:a:v', ['rtmp=', 'swfVfy=', 'playpath=', 'app=', 'live'])[0]
 		rtmp_string = ""
 		for option, value in optlist:
 			if option == '--rtmp' or option == '-r':
@@ -34,6 +34,8 @@ def convert_rtmpdump(rtmpdump_cmd, convert):
 				rtmp_string += ' playpath=' + value.strip('"')
 			elif option == '--app' or option == '-a':
 				rtmp_string += ' app=' + value.strip('"')
+			elif option == '--live' or option == '-v':
+				rtmp_string += ' live=1'
 		return meta + '\n' + rtmp_string
 	# ..or just pass through?
 	else:

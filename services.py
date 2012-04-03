@@ -1,4 +1,5 @@
 from urllib import unquote
+import re
 
 def fix_playpath(url):
 	return url.replace('/mp4:', '/ -y mp4:')
@@ -28,7 +29,8 @@ service = [
 				'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)(?=.*?subtitle=(?P<sub>[^&]*))',
+			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?url:(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)(?=.*?subtitle=(?P<sub>[^&]*))',
+				'decode':		lambda cmd: cmd if re.search('webb\d_\d+p', cmd) is None else cmd + ' -v' ,
 				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
 		[#SVT-play-alternate/flv clip
 			{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
