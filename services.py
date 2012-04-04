@@ -1,5 +1,7 @@
 from urllib import unquote
 import re
+import httplib
+from pyamf import remoting
 
 def fix_playpath(url):
 	return url.replace('/mp4:', '/ -y mp4:')
@@ -19,6 +21,32 @@ def decrypt_pbs_url(url):
 		raise ValueError("IV must be 16 bytes")
 	cipher = AES.new(key, AES.MODE_CBC, iv)
 	return cipher.decrypt(data) + '&format=SMIL'
+
+def get_brightcove_streams(video_player, player_id, player_key, publisher_id, const):
+	env = remoting.Envelope(amfVersion=3)
+	env.bodies.append(
+		(
+			"/1", 
+			remoting.Request(
+				target="com.brightcove.player.runtime.PlayerMediaFacade.findMediaById", 
+				body=[const, player_id, video_player, publisher_id],
+				envelope=env
+			)
+		)
+	)
+	env = str(remoting.encode(env).read())
+
+	conn = httplib.HTTPConnection("c.brightcove.com")
+	conn.request("POST", "/services/messagebroker/amf?playerKey=" + player_key, env, {'content-type': 'application/x-amf'})
+	response = conn.getresponse().read()
+	rtmp = ''
+	for rendition in remoting.decode(response).bodies[0][1].body['renditions']:
+		rtmp += '"%sx%s:%s";' % (rendition['frameWidth'], rendition['frameHeight'], rendition['defaultURL'])
+	print rtmp
+	return rtmp
+
+def build_brightcove_dict(s):
+	return dict(pair.split('=') for pair in s.split('&'))
 
 service = [
 		[
@@ -199,5 +227,12 @@ service = [
 				're':			'(http://)?(www\.)?filmarkivet.se/(?P<path>.*)',
 				'template':		'http://filmarkivet.se/%(path)s'},
 			{	're':			r"movieName\s=\s'(?P<movie_name>[^']+)'.*?streamer:\s'(?P<base>[^']+)'",
-				'template':		'#\nrtmpdump -r "%(base)s%(movie_name)s" -o "%(output_file)s"'}]
+				'template':		'#\nrtmpdump -r "%(base)s%(movie_name)s" -o "%(output_file)s"'}],
+		[
+			{	'service-name':		'Elitserien-play',
+				're':			r'(http://)?(www\.)?elitserienplay.se/.*?video\.(?P<video_player>\d+)',
+				'template':		'brightcove:video_player=%(video_player)s&player_id=1199515803001&publisher_id=656327052001&const=2ba01fac60a902ffc3c6322c3ef5546dbcf393e4&player_key=AQ~~,AAAAmNAkCuE~,RfA9vPhrJwdowytpDwHD00J5pjBMVHD6'},
+			{
+				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^\?]+)(?P<query>\?[^"]+)";',
+				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r "%(URL)s%(query)s" -y %(path)s -o %(output_file)s'}]
 ]
