@@ -101,7 +101,7 @@ service = [
 				're'		:	r'(http://)?(www\.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
 				'template'	:	'http://viastream.viasat.tv/PlayProduct/%(id)s'},
 			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>rtmp[^\]]+)',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s',
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer.viastream.viasat.tv/play/swf/player120328.swf -r %(url)s -o %(output_file)s',
 				'decode':		fix_playpath}],
 		[#MTG-alternate
 			{	're'		:	r'(http://)?(www\.)?tv[368]play.se/.*(?:play/(?P<id>\d+)).*',
@@ -109,7 +109,7 @@ service = [
 			{	're'		:	r'<SamiFile>(?P<sub>[^<]*).*<Video>.*<BitRate>(?P<bitrate>\d+).*?<Url><!\[CDATA\[(?P<url>http[^\]]+)',
 				'template'	:	'%(url)s'},
 			{	're'		:	r'<Url>(?P<url>[^<]+)',
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer-viastream-viasat-tv.origin.vss.viasat.tv/play/swf/player110420.swf -r %(url)s -o %(output_file)s',
+				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump -W http://flvplayer.viastream.viasat.tv/play/swf/player120328.swf -r %(url)s -o %(output_file)s',
 				'decode':		fix_playpath}],
 		[
 			{	'service-name':		'Aftonbladet-TV',
