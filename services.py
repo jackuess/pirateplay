@@ -132,14 +132,20 @@ service = [
 				're'		:	r'Location: (?P<url>.*?)\n',
 				'template'	:	'#quality: %(quality)s;\n%(url)s'}],
 		[
-			{	'service-name':		'Kanal5-play, Kanal9-play',
-				're'		:	r'(http://)?(www\.)?kanal(?P<n>5|9)play.se/(?P<url>.+)',
-				'template'	:	'http://kanal%(n)splay.se/%(url)s'},
+			{	'service-name':		'Kanal9-play',
+				're'		:	r'(http://)?(www\.)?kanal9play.se/(?P<url>.+)',
+				'template'	:	'http://kanal9play.se/%(url)s'},
 			{	're'		:	r'@videoPlayer" value="(?P<video_player>[^"]+)"',
 				'template'	:	'kanal5://%(video_player)s'},
 			{
 				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^"]+)";',
 				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r %(URL)s -y %(path)s -o %(output_file)s'}],
+		[
+			{	'service-name':		'Kanal5-play',
+				're':			r'(http://)?(www\.)?kanal5play.se/.*video/(?P<id>\d+)',
+				'template':		'http://www.kanal5play.se/api/getVideo?format=FLASH&videoId=%(id)s'},
+			{	're':			r'"bitrate":(?P<bitrate>\d+).*?"source":"(?P<path>[^"]+)"(?=.*?"streamBaseUrl":"(?P<base>[^"]+)")',
+				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(base)s" -y "%(path)s" -W "http://www.kanal5play.se/flash/StandardPlayer.swf" -o "%(output_file)s"'}],
 		[
 			{	'service-name':		'Axess-TV',
 				're'		:	r'(http://)?(www\.)?axess.se/(?P<url>.+)',
