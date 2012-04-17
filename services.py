@@ -53,7 +53,7 @@ service = [
 			{	'service-name':		'SVT-play',
 			#	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
 			#	'template'	:	'http://svtplay.se/%(url)s'},
-				're'		:	r'(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
+				're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
 				'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
@@ -61,17 +61,22 @@ service = [
 				'decode':		lambda cmd: cmd if re.search('webb\d_\d+p', cmd) is None else cmd + ' -v' ,
 				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
 		[#SVT-play-alternate/flv clip
-			{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+			{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
 			#{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
 			#	'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
 			{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
 				'template'	:	'#\n%(url)s'}],
 		[#SVT-play-alternate/flv clip-rtmp
-			{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+			{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
 				'template'	:	'http://svtplay.se/%(url)s'},
 			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)pathflv=(?P<url>rtmpe?://[^&]+)',
 				'template'	:	'#\nrtmpdump -W "http://svtplay.se%(swf_url)s" -r "%(url)s" -o %(output_file)s'}],
+		[#SVT-play-beta
+			{	're':			r'^(http://)?(www\.)?beta\.svtplay\.se/(?P<path>.*)',
+				'template':		'http://beta.svtplay.se/%(path)s?type=embed&output=json'},
+			{	're':			r'"url":"(?P<url>rtmp[^"]+)".*?"bitrate":(?P<bitrate>\d+)(?=.*?"subtitleReferences":\[{"url":"(?P<sub>[^"]+))',
+				'template':		'#quality: %(bitrate)s; subtitles: %(sub)s;\nrtmpdump -r "%(url)s" --swfVfy "http://beta.svtplay.se/public/swf/video/svtplayer-2012.06.swf" -o "output_file"'}],
 		[
 			{	'service-name':		'SR',
 				're'		:	r'(http://)?(www\.)?sverigesradio.se/(?P<url>.+)',
@@ -211,7 +216,7 @@ service = [
 				're':			r'(http://)?(www\.)?tv\.expressen\.se(?P<url>.+)',
 				'template':		'http://tv.expressen.se/%(url)s?standAlone=true&output=xml'},
 			{	're':			r"<vurl bitrate='(?P<bitrate>\d+)'><!\[CDATA\[(?P<rtmp_url>[^\]]+)",
-				'template':		'#quality: %(bitrate)s\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf" -o %(output_file)s'}],
+				'template':		'#quality: %(bitrate)s;\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf" -o %(output_file)s'}],
 		[
 			{	'service-name':		'PBS',
 				're':			r'(http://)?video\.pbs\.org/video/(?P<id>\d+)',
@@ -239,6 +244,14 @@ service = [
 				're':			r'(http://)?(www\.)?elitserienplay.se/.*?video\.(?P<video_player>\d+)',
 				'template':		'brightcove:video_player=%(video_player)s&player_id=1199515803001&publisher_id=656327052001&const=2ba01fac60a902ffc3c6322c3ef5546dbcf393e4&player_key=AQ~~,AAAAmNAkCuE~,RfA9vPhrJwdowytpDwHD00J5pjBMVHD6'},
 			{
-				're'		:	r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^\?]+)(?P<query>\?[^"]+)";',
-				'template'	:	'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r "%(URL)s%(query)s" -y %(path)s -o %(output_file)s'}]
+				're':			r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^\?]+)(?P<query>\?[^"]+)";',
+				'template':		'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r "%(URL)s%(query)s" -y %(path)s -o %(output_file)s'}],
+		[
+			{	'service-name':		'Discovery',
+				're':			r'(http://)?(www\.)?dsc\.discovery\.com/videos/(?P<path>.*)',
+				'template':		'http://dsc.discovery.com/videos/%(path)s'},
+			{	're':			r'flash_video_url":"(?P<url>[^"]+)"',
+				'template':		'%(url)s'},
+			{	're':			r'(<meta name="httpBase" content="(?P<base>[^"]+)".*?)?<video src="(?P<video_path>[^"]+)" system-bitrate="(?P<bitrate>\d+)"',
+				'template':		'#quality: %(bitrate)s;\n%(base)s/%(video_path)s'}]
 ]
