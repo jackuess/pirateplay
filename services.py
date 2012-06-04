@@ -49,34 +49,34 @@ def build_brightcove_dict(s):
 	return dict(pair.split('=') for pair in s.split('&'))
 
 service = [
-		[
-			{	'service-name':		'SVT-play',
-			#	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
-			#	'template'	:	'http://svtplay.se/%(url)s'},
-				're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
-				'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
-			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
-			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?url:(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)(?=.*?subtitle=(?P<sub>[^&]*))',
-				'decode':		lambda cmd: cmd if re.search('webb\d_\d+p', cmd) is None else cmd + ' -v' ,
-				'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
-		[#SVT-play-alternate/flv clip
-			{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
-				'template'	:	'http://svtplay.se/%(url)s'},
-			#{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
-			#	'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
-			{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
-				'template'	:	'#\n%(url)s'}],
-		[#SVT-play-alternate/flv clip-rtmp
-			{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
-				'template'	:	'http://svtplay.se/%(url)s'},
-			{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)pathflv=(?P<url>rtmpe?://[^&]+)',
-				'template'	:	'#\nrtmpdump -W "http://svtplay.se%(swf_url)s" -r "%(url)s" -o %(output_file)s'}],
+		#[
+			#{	'service-name':		'SVT-play',
+			##	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+			##	'template'	:	'http://svtplay.se/%(url)s'},
+				#'re'		:	r'^(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
+				#'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
+			##{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+			##{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*subtitle=(?P<sub>[^&]+).*?)?(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)',
+			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)?url:(?P<url>rtmpe?://[^,]+),bitrate:(?P<bitrate>[0-9]+)(?=.*?subtitle=(?P<sub>[^&]*))',
+				#'decode':		lambda cmd: cmd if re.search('webb\d_\d+p', cmd) is None else cmd + ' -v' ,
+				#'template'	:	'#quality: %(bitrate)s kbps; subtitles: %(sub)s;\nrtmpdump --swfVfy http://svtplay.se%(swf_url)s -r %(url)s -o %(output_file)s'}],
+		#[#SVT-play-alternate/flv clip
+			#{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+				#'template'	:	'http://svtplay.se/%(url)s'},
+			##{	're'		:	r'(http://)?(www\.)?svtplay.se/(?P<path>(t|v)/\d+)',
+			##	'template'	:	'http://svtplay.se/popup/minispelare/%(path)s'},
+			#{	're'		:	r'pathflv=(?P<url>http?://[^&]+)',
+				#'template'	:	'#\n%(url)s'}],
+		#[#SVT-play-alternate/flv clip-rtmp
+			#{	're'		:	r'^(http://)?(www\.)?svtplay.se/(?P<url>.+)',
+				#'template'	:	'http://svtplay.se/%(url)s'},
+			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)pathflv=(?P<url>rtmpe?://[^&]+)',
+				#'template'	:	'#\nrtmpdump -W "http://svtplay.se%(swf_url)s" -r "%(url)s" -o %(output_file)s'}],
 		[#SVT-play-beta
-			{	're':			r'^(http://)?(www\.)?beta\.svtplay\.se/(?P<path>.*)',
-				'template':		'http://beta.svtplay.se/%(path)s?type=embed&output=json'},
+			{	're':			r'^(http://)?(www\.)?svtplay\.se/(?P<path>.*)',
+				'template':		'http://svtplay.se/%(path)s?type=embed&output=json'},
 			{	're':			r'"url":"(?P<url>rtmp[^"]+)".*?"bitrate":(?P<bitrate>\d+)(?=.*?"subtitleReferences":\[{"url":"(?P<sub>[^"]+))',
-				'template':		'#quality: %(bitrate)s; subtitles: %(sub)s;\nrtmpdump -r "%(url)s" --swfVfy "http://beta.svtplay.se/public/swf/video/svtplayer-2012.06.swf" -o "output_file"'}],
+				'template':		'#quality: %(bitrate)s; subtitles: %(sub)s;\nrtmpdump -r "%(url)s" --swfVfy "http://www.svtplay.se/public/swf/video/svtplayer-2012.15.swf" -o "output_file"'}],
 		[
 			{	'service-name':		'SR',
 				're'		:	r'(http://)?(www\.)?sverigesradio.se/(?P<url>.+)',
