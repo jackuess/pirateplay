@@ -258,5 +258,11 @@ service = [
 			{	're':			r'flash_video_url":"(?P<url>[^"]+)"',
 				'template':		'%(url)s'},
 			{	're':			r'(<meta name="httpBase" content="(?P<base>[^"]+)".*?)?<video src="(?P<video_path>[^"]+)" system-bitrate="(?P<bitrate>\d+)"',
-				'template':		'#quality: %(bitrate)s;\n%(base)s/%(video_path)s'}]
+				'template':		'#quality: %(bitrate)s;\n%(base)s/%(video_path)s'}],
+		[
+			{	'service-name':		'Das Erste Mediathek',
+				're':			r'(http://)?mediathek\.daserste\.de/(?P<path>.*)',
+				'template':		'http://mediathek.daserste.de/%(path)s'},
+			{	're':			r'mediaCollection\.addMediaStream\(\d,\s(?P<quality>\d),\s"(?P<base>[^"]+)",\s"(?P<path>[^"]+)"',
+				'template':		'#quality: %(quality)s;\nrtmpdump -r "%(base)s" -y "%(path)s"'}]
 ]
