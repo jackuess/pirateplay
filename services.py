@@ -76,7 +76,7 @@ service = [
 			{	're':			r'^(http://)?(www\.)?svtplay\.se/(?P<path>.*)',
 				'template':		'http://svtplay.se/%(path)s?type=embed&output=json'},
 			{	're':			r'"url":"(?P<url>rtmp[^"]+)".*?"bitrate":(?P<bitrate>\d+)(?=.*?"subtitleReferences":\[{"url":"(?P<sub>[^"]*))',
-				'template':		'#quality: %(bitrate)s; subtitles: %(sub)s;\nrtmpdump -r "%(url)s" --swfVfy "http://www.svtplay.se/public/swf/video/svtplayer-2012.15.swf" -o "output_file"'}],
+				'template':		'#quality: %(bitrate)s; subtitles: %(sub)s;\nrtmpdump -r "%(url)s" --swfVfy "http://www.svtplay.se/public/swf/video/svtplayer-2012.15.swf" -o "%(output_file)s"'}],
 		[#SVT-play-http
 			{	're':			r'^(http://)?(www\.)?svtplay\.se/(?P<path>.*)',
 				'template':		'http://svtplay.se/%(path)s?type=embed&output=json'},
