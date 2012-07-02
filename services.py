@@ -73,7 +73,8 @@ service = [
 			#{	're'		:	r'(?:name="movie" value="(?P<swf_url>[^"]+)".*?)pathflv=(?P<url>rtmpe?://[^&]+)',
 				#'template'	:	'#\nrtmpdump -W "http://svtplay.se%(swf_url)s" -r "%(url)s" -o %(output_file)s'}],
 		[#SVT-play-beta
-			{	're':			r'^(http://)?(www\.)?svtplay\.se/(?P<path>.*)',
+			{	'service-name':		'SVT-play',
+				're':			r'^(http://)?(www\.)?svtplay\.se/(?P<path>.*)',
 				'template':		'http://svtplay.se/%(path)s?type=embed&output=json'},
 			{	're':			r'"url":"(?P<url>rtmp[^"]+)".*?"bitrate":(?P<bitrate>\d+)(?=.*?"subtitleReferences":\[{"url":"(?P<sub>[^"]*))',
 				'decode':		lambda cmd: cmd if re.search('webb\d_\d+p', cmd) is None else cmd + ' -v' ,
