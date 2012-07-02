@@ -220,10 +220,12 @@ service = [
 				'decode':		lambda url: url.replace('&amp;', '&')}],
 		[
 			{	#'service-name':		'Expressen-TV',
-				're':			r'(http://)?(www\.)?tv\.expressen\.se(?P<url>.+)',
-				'template':		'http://tv.expressen.se/%(url)s?standAlone=true&output=xml'},
-			{	're':			r"<vurl bitrate='(?P<bitrate>\d+)'><!\[CDATA\[(?P<rtmp_url>[^\]]+)",
-				'template':		'#quality: %(bitrate)s;\nrtmpdump -r "%(rtmp_url)s" -W "http://tv.expressen.se/swf/swf/tv/player.swf" -o %(output_file)s'}],
+				're':			r'(http://)?(www\.)?expressen\.se/(?P<path>.+)',
+				'template':		'http://www.expressen.se/%(path)s?'},
+			{	're':			r'swfobject.embedSWF\("(?P<swf_path>[^"]+)",\s"tvMainVideo".*?xmlUrl:\s\'(?P<xml_url>[^\']+)',
+				'template':		'%(xml_url)s'},
+			{	're':			r'<vurl bitrate="(?P<bitrate>\d+)"><!\[CDATA\[(?P<base>rtmpe?://[^/]+/[^/]+)/(?P<play_path>[^\]]+)\.flv',
+				'template':		'#quality: %(bitrate)s;\nrtmpdump -r "%(base)s" -y "%(play_path)s" -W "http://www.expressen.se%(swf_path)s" -o "%(output_file)s"'}],
 		[
 			{	'service-name':		'PBS',
 				're':			r'(http://)?video\.pbs\.org/video/(?P<id>\d+)',
