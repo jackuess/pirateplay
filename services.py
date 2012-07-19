@@ -192,17 +192,28 @@ service = [
 				'template':		'%(url)s'},
 			{	're':			r'href="(?P<url>mms://[^"]+)"',
 				'template':		'#\n%(url)s'}],
+		#OLD[
+			#{	'service-name':		'DR NU',
+				#'re':			r'(http://)?(www\.)?dr\.dk/nu/player/#/(?P<title>[^/]+)/(?P<id>\d+).*',
+				#'template':		'http://www.dr.dk/nu/api/programseries/%(title)s/videos'},
+			#{
+				#'re':			r'"id": %(id)s,[^}]+"videoResourceUrl": "(?P<url>[^"]+)"',
+				#'template':		'%(url)s'},
+			#{
+				#'re':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
+				#'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf -o %(output_file)s',
+				#'decode':		lambda url: fix_playpath(url.replace('\\', ''))}],
 		[
-			{	'service-name':		'DR NU',
-				're':			r'(http://)?(www\.)?dr\.dk/nu/player/#/(?P<title>[^/]+)/(?P<id>\d+).*',
-				'template':		'http://www.dr.dk/nu/api/programseries/%(title)s/videos'},
-			{
-				're':			r'"id": %(id)s,[^}]+"videoResourceUrl": "(?P<url>[^"]+)"',
-				'template':		'%(url)s'},
-			{
-				're':			r'uri":"(?P<uri>[^"]+)".*?"bitrateKbps":(?P<bitrate>\d+)',
-				'template':		'#quality: %(bitrate)s\nrtmpdump -r %(uri)s -W http://www.dr.dk/nu/assets/swf/NetTVPlayer_10.swf -o %(output_file)s',
-				'decode':		lambda url: fix_playpath(url.replace('\\', ''))}],
+			{	'service-name':	'DR-TV',
+				're':			r'(http://)?(www\.)?dr\.dk/(?P<path>TV/se/.+)',
+				'template':		'http://www.dr.dk/%(path)s'},
+			{	're':			r'videoData:\s+{.+?resource:\s+"(?P<resource_url>[^"]+)"',
+				'template':		'%(resource_url)s'},
+			{	're':			r'Location: (?P<redirect_url>.*?)\n',
+				'template':		'%(redirect_url)s'},
+			{	're':			r'"uri":"(?P<rtmp_base>rtmpe?:\\/\\/vod\.dr\.dk\\/cms\\/)(?P<rtmp_path>[^"]+).*?"bitrateKbps":(?P<bitrate>\d+)',
+				'template':		'#quality: %(bitrate)s kbps;\nrtmpdump -r "%(rtmp_base)s" -y "%(rtmp_path)s" -W "http://www.dr.dk/assets/swf/program-player.swf" -o "%(output_file)s"',
+				'decode':		lambda url: url.replace('\\', '')}],
 		[
 			{	'service-name':		'Ceskatelevize',
 				're':			r'(http://)?(www\.)?ceskatelevize\.cz/(?P<url>.+)',
