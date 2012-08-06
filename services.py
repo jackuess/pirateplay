@@ -265,7 +265,7 @@ service = [
 				'template':		'brightcove:video_player=%(video_player)s&player_id=1199515803001&publisher_id=656327052001&const=2ba01fac60a902ffc3c6322c3ef5546dbcf393e4&player_key=AQ~~,AAAAmNAkCuE~,RfA9vPhrJwdowytpDwHD00J5pjBMVHD6'},
 			{
 				're':			r'"(?P<height>\d+)x(?P<width>\d+):(?P<URL>[^&]+)&(?P<path>[^\?]+)(?P<query>\?[^"]+)";',
-				'template':		'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r "%(URL)s%(query)s" -y %(path)s -o %(output_file)s'}],
+				'template':		'#quality: %(height)sx%(width)s;\nrtmpdump --swfVfy http://admin.brightcove.com/viewer/us1.25.04.01.2011-05-24182704/connection/ExternalConnection_2.swf -r "%(URL)s%(query)s" -y "%(path)s" -o "%(output_file)s"'}],
 		[
 			{	'service-name':		'Discovery',
 				're':			r'(http://)?(www\.)?dsc\.discovery\.com/videos/(?P<path>.*)',
@@ -279,11 +279,11 @@ service = [
 				're':			r'(http://)?mediathek\.daserste\.de/(?P<path>.*)',
 				'template':		'http://mediathek.daserste.de/%(path)s'},
 			{	're':			r'mediaCollection\.addMediaStream\(\d,\s(?P<quality>\d),\s"(?P<base>[^"]+)",\s"(?P<path>[^"]+)"',
-				'template':		'#quality: %(quality)s;\nrtmpdump -r "%(base)s" -y "%(path)s"'}],
+				'template':		'#quality: %(quality)s;\nrtmpdump -r "%(base)s" -y "%(path)s" -o "%(output_file)s"'}],
 		[
 			{	'service-name':	'Disney Junior',
 				're':			r'(http://)?(www\.)?disney\.se/disney-junior/(?P<path>.+)',
 				'template':		'http://www.disney.se/disney-junior/%(path)s'},
 			{	're':			r"config\.firstVideoSource\s=\s'(?P<play_path>[^']+)'.*?config\.rtmpeServer\s=\s'(?P<base>[^']+)'",
-				'template':		'#\nrtmpdump -r "%(base)s" -y "mp4:/%(play_path)s" -W "http://www.disney.se/cms_res/disney-junior/flash/video_hub_player/disney_player.swf"'}]
+				'template':		'#\nrtmpdump -r "%(base)s" -y "mp4:/%(play_path)s" -W "http://www.disney.se/cms_res/disney-junior/flash/video_hub_player/disney_player.swf" -o "%(output_file)s"'}]
 ]
