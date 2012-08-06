@@ -279,5 +279,11 @@ service = [
 				're':			r'(http://)?mediathek\.daserste\.de/(?P<path>.*)',
 				'template':		'http://mediathek.daserste.de/%(path)s'},
 			{	're':			r'mediaCollection\.addMediaStream\(\d,\s(?P<quality>\d),\s"(?P<base>[^"]+)",\s"(?P<path>[^"]+)"',
-				'template':		'#quality: %(quality)s;\nrtmpdump -r "%(base)s" -y "%(path)s"'}]
+				'template':		'#quality: %(quality)s;\nrtmpdump -r "%(base)s" -y "%(path)s"'}],
+		[
+			{	'service-name':	'Disney Junior',
+				're':			r'(http://)?(www\.)?disney\.se/disney-junior/(?P<path>.+)',
+				'template':		'http://www.disney.se/disney-junior/%(path)s'},
+			{	're':			r"config\.firstVideoSource\s=\s'(?P<play_path>[^']+)'.*?config\.rtmpeServer\s=\s'(?P<base>[^']+)'",
+				'template':		'#\nrtmpdump -r "%(base)s" -y "mp4:/%(play_path)s" -W "http://www.disney.se/cms_res/disney-junior/flash/video_hub_player/disney_player.swf"'}]
 ]
