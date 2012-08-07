@@ -98,21 +98,30 @@ class Modes:
 	Print, Play, Save = range(3)
 
 if __name__ == "__main__":
-	if system('which ffplay > /dev/null') != 0:
-		sys.exit('\nffplay not found.\nPirateplay needs ffplay to play your streams.')
+	if system('which vlc > /dev/null') != 0:
+		sys.exit('\nVlc not found.\nPirateplay needs Vlc to play your streams.')
+	
+	#Set defaults
+	mode = Modes.Play
+	out = '-'
+	librtmp_output = True
 	
 	opts, values = getopt.getopt(sys.argv[1:], 'pys:', ['print', 'play', 'save='])
-	mode = Modes.Play
 	for option, value in opts:
 			if option == '--print' or option == '-p':
 				mode = Modes.Print
+				librtmp_output = False
 			elif option == '--play' or option == '-y':
 				mode = Modes.Play
 			elif option == '--save' or option == '-s':
 				mode = Modes.Save
+				out = value
+				librtmp_output = False
+	
 	i = 0
 	exe = []
-	for cmd in remove_duplicates(generate_getcmd(sys.argv[len(sys.argv)-1], True, output_file="-")):
+	print 'Found streams:'
+	for cmd in remove_duplicates(generate_getcmd(sys.argv[len(sys.argv)-1], librtmp_output, output_file=out)):
 		if mode == Modes.Print:
 			print cmd
 		else:
@@ -121,7 +130,12 @@ if __name__ == "__main__":
 			i += 1
 			if desc == '#':
 				desc = '#Stream %d' % i
-			print('%d. %s' % (i, desc.strip('#')))
+			print(' %d. %s' % (i, desc.strip('#')))
 	
-	if mode == Modes.Play:
-		system('ffplay "' + exe[int(raw_input('Choose stream: '))-1] + '"')
+	if mode != Modes.Print:
+		i_choosenstream = int(raw_input('Choose stream: '))-1
+		
+		if mode == Modes.Play:
+			system('vlc "' + exe[i_choosenstream] + '"')
+		elif mode == Modes.Save:
+			system(exe[i_choosenstream])
